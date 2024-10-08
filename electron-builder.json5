@@ -1,0 +1,124 @@
+// @see https://www.electron.build/configuration/configuration
+{
+  // 应用程序id
+  "appId": "com.node.app",
+  // 应用名称
+  "productName": "node-electron",
+  // 设置为 true 可以把自己的代码合并并加密
+  "asar": false,
+  "directories": {
+    // 构建资源路径默认为build
+    // "buildResources": "build",
+    // 输出目录 默认为dist
+    "output": "dist"
+  },
+  "nsis": {
+    "perMachine": false,
+    "shortcutName": "Electron App",
+    // 是否一键安装，建议为 false，可以让用户点击下一步、下一步、下一步的形式安装程序，如果为true，当用户双击构建好的程序，自动安装程序并打开，即：一键安装（one-click installer）
+    "oneClick": false,
+    // 允许请求提升。 如果为false，则用户必须使用提升的权限重新启动安装程序。
+    "allowElevation": true,
+    // 允许修改安装目录，建议为 true，是否允许用户改变安装目录，默认是不允许
+    "allowToChangeInstallationDirectory": true,
+    // 创建桌面图标
+    "createDesktopShortcut": false,
+    // 创建开始菜单图标
+    "createStartMenuShortcut": false,
+    // electron中LICENSE.txt所需要的格式，并非是GBK，或者UTF-8，LICENSE.txt写好之后，需要进行转化，转化为ANSI
+//    "license": "LICENSE.txt",
+    // 安装图标
+    // "installerIcon": "build/installerIcon_120.ico",
+    // 卸载图标
+    // "uninstallerIcon": "build/uninstallerIcon_120.ico",
+    // 安装时头部图标
+    // "installerHeaderIcon": "build/installerHeaderIcon_120.ico",
+  },
+  "linux": {
+    "target": [
+      "snap"
+    ]
+  },
+  "win": {
+    // 打包成一个独立的 exe 安装程序
+    'target': 'nsis',
+    // 这个意思是打出来32 bit + 64 bit的包，但是要注意：这样打包出来的安装包体积比较大，所以建议直接打32的安装包。
+    // 'arch': [
+    //   'x64',
+    //   'ia32'
+    // ]
+    //      "target": [
+    //        "nsis",
+    //        "zip"
+    //      ]
+    // 目标包类型
+  },
+  //  "mac": {
+  //    // 应用程序类别
+  //    "category": "public.app-category.developer-tools",
+  //    // 目标包类型
+  //    "target": [
+  //      "dmg",
+  //      "zip"
+  //    ],
+  //    // 图标的路径
+  //    "icon": "build/icon.icns"
+  //  },
+  // "dmg": {
+  // 背景图像的路径
+  //    "background": "build/background.tiff or build/background.png",
+  //    "title": "标题",
+  // 图标路径
+  //    "icon": "build/icon.icns"
+  // },
+
+  "files": [
+    // electron主线程
+    {
+      "from": "build/main",
+      "to": "main",
+      "filter": [
+        "**/*"
+      ]
+    },
+    // renderer线程(前端页面)
+    {
+      "from": "build/renderer",
+      "to": "renderer",
+      "filter": [
+        "**/*"
+      ]
+    },
+    // node服务
+    {
+      "from": "build/server",
+      "to": "server",
+      "filter": [
+        "**/*"
+      ]
+    },
+    // 静态文件
+//    {
+//      "from": "src/main/static",
+//      "to": "static",
+//      "filter": [
+//        "**/*"
+//      ]
+//    },
+    "!build",
+    "!dist",
+    "!scripts",
+    "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+    "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+    "!**/node_modules/*.d.ts",
+    "!**/node_modules/.bin",
+    "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
+    "!.editorconfig",
+    "!**/._*",
+    "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
+    "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
+    "!**/{appveyor.yml,.travis.yml,circle.yml}",
+    "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
+    "package.json"
+  ]
+}

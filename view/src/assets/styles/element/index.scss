@@ -1,0 +1,29 @@
+
+$--colors: (
+  "primary": (
+    "base": #3A77FF,
+  ),
+  "success": (
+    "base": #0EB67F,
+  ),
+  "warning": (
+    "base": #F5AB01,
+  ),
+  "danger": (
+    "base": #EF6B53,
+  ),
+  "error": (
+    "base": #db2828,
+  ),
+  
+);
+
+
+
+@forward "element-plus/theme-chalk/src/common/var.scss" with (
+  // do not use same name, it will override.
+  $colors: $--colors,
+);
+
+
+@use "element-plus/theme-chalk/src/index.scss" as *;

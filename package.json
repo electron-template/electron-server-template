@@ -1,0 +1,30 @@
+{
+  "name": "1",
+  "version": "1.0.0",
+  "type": "commonjs",
+  "main": "main/main/index.js",
+  "scripts": {
+    "dev": "node scripts/dev/index.js",
+    "build": "node scripts/build/index.js && electron-builder",
+    "build:win": "node scripts/build/index.js && electron-builder --win",
+    "build:mac": "node scripts/build/index.js && electron-builder --mac",
+    "build:linux": "node scripts/build/index.js && electron-builder --linux"
+  },
+  "author": "wanglun",
+  "license": "ISC",
+  "description": "electron+nest+elementPlus",
+  "devDependencies": {
+    "chalk": "^4.1.2",
+    "chokidar": "^3.5.3",
+    "electron": "^27.1.0",
+    "electron-builder": "^23.6.0",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.5"
+  },
+  "dependencies": {
+    "@nestjs/core": "^10.4.4",
+    "@nestjs/platform-express": "^10.4.4",
+    "axios": "^1.7.7",
+    "tailwindcss": "^3.4.13"
+  }
+}
