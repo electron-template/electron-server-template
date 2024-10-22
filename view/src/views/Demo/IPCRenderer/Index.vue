@@ -2,7 +2,7 @@
   <span>接收的消息:{{ onMsg }}</span>
 
   <div class="card">
-    <input v-model="msg" type="text" placeholder="输入发送消息">
+    <input class="block" v-model="msg" type="text" placeholder="输入发送消息">
     <button style="margin-left: 20px" @click="sendMsg">
       发送
     </button>

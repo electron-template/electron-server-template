@@ -1,13 +1,16 @@
 import {createApp} from 'vue'
 import App from './App.vue'
 
-import './assets/styles/main.css'
 
 //#region 引入element-plus
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 //#endregion
+
+import './assets/styles/main.css'
+// 暂时注释,开启这个修改默认主题会收到element里样式错误的警告
+// import '@/assets/styles/element/index.scss'
 import router from './router'
 
 //#region 初始化
