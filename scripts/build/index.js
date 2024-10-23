@@ -14,7 +14,7 @@ const nestPath=Path.join(rootPath,'server');
 const electronPath = Path.join(rootPath, 'electron')
 const electronOutPath = Path.join(rootPath, 'build', 'main')
 const buildOutPath = Path.join(rootPath, 'build')
-const viteConfigFile = Path.join(rootPath, 'view', 'vite.config.js')
+const viteConfigFile = Path.join(rootPath, 'renderer', 'vite.config.js')
 
 function copyStaticFilesHandler () {
   const copy = copyStaticFiles(electronPath, electronOutPath)

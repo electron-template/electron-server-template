@@ -6,7 +6,7 @@ const Chokidar = require('chokidar')
 const rootPath = Path.join(__dirname, '..', '..')
 const electronPath = Path.join(rootPath, 'electron')
 const electronOutPath = Path.join(rootPath, 'build', 'main')
-const viteConfigFile = Path.join(rootPath, 'view', 'vite.config.js')
+const viteConfigFile = Path.join(rootPath, 'renderer', 'vite.config.js')
 
 const startRenderer = require('./renderer')
 
