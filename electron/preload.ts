@@ -1,12 +1,14 @@
 import {contextBridge, ipcRenderer} from "electron";
 
 createPreload()
+
 function createPreload() {
     createIpcRenderer()
     createLoading()
 }
+
 // 向Renderer进程公开一些API，这些api会挂在在window[apiKey]上，这里是window.ipcRenderer
-function createIpcRenderer(){
+function createIpcRenderer() {
     contextBridge.exposeInMainWorld('ipcRenderer', {
         //主进程就是调用new BrowserWindow()的那个进程,也就是这里的electron/main/index.ts
         //渲染进程就是管理每个窗口的那个进程,也就是new BrowserWindow()返回的win.webContents,同时也是src/main.js,因为创建窗口会调用主文件去构建应用
@@ -45,7 +47,14 @@ function createIpcRenderer(){
         request(...args: Parameters<typeof ipcRenderer.invoke>) {
             const [channel, ...omit] = args
             return ipcRenderer.invoke(channel, ...omit)
-        }
+        },
+
+        // 暴露给渲染进程的API
+        onChildOutput: (callback) => {
+            ipcRenderer.on('child-output', (event, output) => {
+                callback(output);
+            });
+        },
         // ...
     })
 

@@ -9,7 +9,6 @@ import path from 'node:path'
 // import { createRequire } from 'node:module'
 // const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-console.log('__dirname', __dirname)
 // const basePath = path.resolve(__dirname, '../')
 // const outDir= path.join(basePath, 'build', 'renderer')
 // const root=path.join(basePath, 'view')

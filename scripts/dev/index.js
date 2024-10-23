@@ -4,7 +4,6 @@ const Chalk = require('chalk')
 const Chokidar = require('chokidar')
 
 const rootPath = Path.join(__dirname, '..', '..')
-const nestPath = Path.join(__dirname, '..', '..', 'server')
 const electronPath = Path.join(rootPath, 'electron')
 const electronOutPath = Path.join(rootPath, 'build', 'main')
 const viteConfigFile = Path.join(rootPath, 'view', 'vite.config.js')
@@ -15,7 +14,6 @@ const copyStaticFiles = require('./static')
 
 const electronManager = require('./electron')
 
-const nestManager = require('./server')
 start()
 
 async function start () {
@@ -54,19 +52,6 @@ async function start () {
     }
 
     restartElectron()
-  })
-  //#endregion
-
-  //#region nest
-  const { startNest, reStartNest } = nestManager(nestPath)
-  await startNest()
-  // 监听nest目录文件变化
-  Chokidar.watch(nestPath, {
-    cwd: nestPath,
-  }).on('change', (path) => {
-    console.log(Chalk.blueBright(`[nest] `) + `Change in ${path}. reloading... 🚀`)
-
-    reStartNest()
   })
   //#endregion
 }

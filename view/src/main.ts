@@ -30,7 +30,10 @@ plugins.forEach(plugin=>{
 })
 //#endregion
 
-
+// 使用预加载脚本中暴露的API
+window.ipcRenderer.on('send-for-main-propress', (_event, ...args) => {
+    console.log('[Receive Main-process message]:', ...args)
+})
 app.mount('#app')
     .$nextTick()
     .then(() => {

@@ -9,7 +9,7 @@ function createRequest() {
         const {path, data} = args
         try {
             // 这里应使用实际的NestJS服务器地址
-            const response = await axios.get(`http://localhost:4000${path}`, {
+            const response = await axios.get(`http://localhost:3000${path}`, {
                 params: {
                     msg: data
                 }
