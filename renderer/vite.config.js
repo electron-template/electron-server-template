@@ -11,7 +11,7 @@ import path from 'node:path'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // const basePath = path.resolve(__dirname, '../')
 // const outDir= path.join(basePath, 'build', 'renderer')
-// const root=path.join(basePath, 'view')
+// const root=path.join(basePath, 'renderer')
 // https://vitejs.dev/config/
 export default defineConfig({
   root: __dirname,
