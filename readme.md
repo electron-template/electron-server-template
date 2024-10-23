@@ -4,12 +4,21 @@
 
 # 问题
 目前服务,页面已经正常启动,server端未能完全分离,依赖未能打包进来,需要优化
+
+# 启动项目
+
+
 # 目录架构
 ```
 node_modules
 build            准备用来打包的文件,文件编译后的目录
-    main 
-    server        
-    renderer
-electron         electron入口和预加载文件
+    main         electron主文件
+    server       服务端文件
+    renderer     前端文件
+
+scripts         执行命令的脚本,可以自己手动执行
+electron        electron相关脚本和预加载文件
+renderer        前端页面
+server          后端服务
+
 ```
