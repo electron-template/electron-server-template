@@ -1,0 +1,51 @@
+{
+  "include": [
+    "server"
+  ],
+  "exclude": [
+    "node_modules",
+    "test",
+    "dist",
+    "build",
+    "**/*spec.ts",
+    "renderer",
+    "scripts",
+    "electron"
+  ],
+  "compilerOptions": {
+    // 指定生成代码的模块系统
+    "module": "commonjs",
+    // 生成相应的 `.d.ts` 声明文件
+    "declaration": true,
+    // 删除所有注释
+    "removeComments": true,
+    // 为装饰器生成元数据
+    "emitDecoratorMetadata": true,
+    // 启用实验性装饰器
+    "experimentalDecorators": true,
+    // 允许从没有默认导出的模块中默认导入
+    "allowSyntheticDefaultImports": true,
+    // 指定 ECMAScript 目标版本
+    "target": "ES2021",
+    // 生成相应的 `.map` 源映射文件
+    "sourceMap": true,
+    // 指定输出目录
+    "outDir": "./build/server",
+    // 解析非相对模块名的基准目录
+    "baseUrl": "./",
+    // 启用增量编译
+    "incremental": true,
+    // 跳过声明文件的类型检查
+    "skipLibCheck": true,
+    // 在严格的 null 检查模式下，null 和 undefined 值不能被赋给非空类型
+    "strictNullChecks": false,
+    // 如果编译器选项 --noImplicitAny 被设置为 true，那么当编译器不能推断出变量或参数的类型时，会报错
+    "noImplicitAny": false,
+    // 严格绑定调用/应用检查
+    "strictBindCallApply": false,
+    // 强制在文件名中使用一致的大小写
+    "forceConsistentCasingInFileNames": false,
+    // 在 switch 语句中不允许控制流落入下一 case 语句，除非有注释 // falls through
+    "noFallthroughCasesInSwitch": false
+  }
+}

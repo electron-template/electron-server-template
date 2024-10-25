@@ -13,7 +13,7 @@ function copyStaticFilesHandler (electronPath, electronOutPath) {
 }
 async function buildMain (rootPath) {
   const electronPath = Path.join(rootPath, 'electron')
-  const electronOutPath = Path.join(rootPath, 'build', 'main')
+  const electronOutPath = Path.join(rootPath, 'build', 'electron')
   try {
     await compileTs(electronPath);
     await copyStaticFilesHandler(electronPath, electronOutPath);

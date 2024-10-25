@@ -3,7 +3,8 @@ import { fork, spawn, exec } from 'child_process';
 import { EOL } from 'os';
 import Chalk from 'chalk';
 import { app } from 'electron';
-
+import { NestFactory } from '@nestjs/core'
+import { AppModule } from '../../server/app.module';
 function sendMessageToRenderer(mainWindow, msg) {
   mainWindow?.webContents.send('send-for-main-propress', msg);
 }
@@ -52,13 +53,16 @@ function createServerHandle(serverPath, mainWindow, ...args) {
   });
 }
 
-function createServer(mainWindow) {
+async function createServer(mainWindow) {
   if (process.env.NODE_ENV !== 'development') {
     const serverPath = join(app.getAppPath(), '/server', 'main.js');
     createServerHandle(serverPath, mainWindow, 'node ' + serverPath);
   } else {
-    const serverPath = join(__dirname, '..', '..', '..', 'server');
-    createServerHandle(serverPath, mainWindow, 'npm', ['run', 'dev'], serverPath);
+
+    const app = await NestFactory.create(AppModule);
+    await app.listen(process.env.PORT ?? 3000);
+    // const serverPath = join(__dirname, '..', '..', '..', 'server');
+    // createServerHandle(serverPath, mainWindow, 'npm', ['run', 'dev'], serverPath);
   }
 
 }

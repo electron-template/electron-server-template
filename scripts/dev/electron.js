@@ -11,7 +11,7 @@ module.exports = ElectronManager;
 
 
 // 监听electron目录文件变化并自动重启electron
-function startWatcher (electronPath) {
+function startWatcher (electronPath, copy, restartElectron) {
   const changeHandle = async (path) => {
     console.log(Chalk.blueBright(`[electron] `) + `Change in ${path}. reloading... 🚀`);
 
@@ -41,7 +41,9 @@ function startWatcher (electronPath) {
 // electron 管理类
 async function ElectronManager (rootPath, rendererPort, stopHandler = () => {}) {
   const electronPath = Path.join(rootPath, 'electron');
-  const electronOutPath = Path.join(rootPath, 'build', 'main');
+  const electronOutPath = Path.join(rootPath, 'build', 'electron');
+  // 这个基本固定
+  const electronMainPath = Path.join(electronOutPath, 'main', 'index.js');
   const copy = copyStaticFiles(electronPath, electronOutPath);
 
   await copy('static');
@@ -53,7 +55,6 @@ async function ElectronManager (rootPath, rendererPort, stopHandler = () => {}) 
   let electronProcess = null;
   let electronProcessLocker = false;
 
-  const electronMainPath = Path.join(electronOutPath, 'main', 'index.js');
 
   function stop () {
     stopHandler?.();
@@ -68,7 +69,7 @@ async function ElectronManager (rootPath, rendererPort, stopHandler = () => {}) 
 
     try {
       await compileTs(electronPath);
-      electronWatcher = startWatcher(electronPath);
+      electronWatcher = startWatcher(electronPath, copy,restartElectron);
     } catch {
       console.log(Chalk.redBright('Could not start Electron because of the above typescript error(s).'));
       electronProcessLocker = false;
