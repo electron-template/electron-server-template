@@ -1,17 +1,18 @@
-const Vite = require('vite')
-const Path = require('path')
-module.exports = buildRenderer
+const Vite = require('vite');
+const Path = require('path');
+module.exports = buildRenderer;
 
-async function buildRenderer (viteConfigFile, buildOutPath, mode) {
-  const outDir = Path.join(buildOutPath, 'renderer')
-  console.log(viteConfigFile, outDir, mode)
+async function buildRenderer (rootPath, mode) {
+  const buildOutPath = Path.join(rootPath, 'build');
+  const viteConfigFile = Path.join(rootPath, 'renderer', 'vite.config.js');
+  const outDir = Path.join(buildOutPath, 'renderer');
   return Vite.build({
                       configFile: viteConfigFile,
                       base: './',
                       build: {
                         outDir,
-                        emptyOutDir: true
+                        emptyOutDir: true,
                       },
-                      mode
-                    })
+                      mode,
+                    });
 }

@@ -9,11 +9,16 @@ function copyStaticFiles (electronPath, electronOutPath) {
   tsc does not copy static files, so copy them over manually for dev server.
   */
   function copyhndler (path) {
-    FileSystem.cpSync(
-      Path.join(electronPath, path),
-      Path.join(electronOutPath, path),
-      { recursive: true }
-    );
+    return FileSystem.promises.cp(Path.join(electronPath, path), Path.join(electronOutPath, path), {
+      recursive: true, //复制目录
+    })
+    // FileSystem.cpSync(
+    //   Path.join(electronPath, path),
+    //   Path.join(electronOutPath, path),
+    //   {
+    //     recursive: true, //复制目录
+    //   }
+    // );
   }
   return copyhndler
 }

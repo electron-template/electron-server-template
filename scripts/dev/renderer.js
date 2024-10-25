@@ -1,15 +1,19 @@
-const Vite = require('vite')
+const Vite = require('vite');
+const Path = require('path');
 
-async function startRenderer (viteConfigFile,mode) {
+async function startRenderer (rootPath, mode) {
+  const viteConfigFile = Path.join(rootPath, 'renderer', 'vite.config.js');
+
   const viteDevServer = await Vite.createServer({
-                                               configFile: viteConfigFile,
-                                               mode,
-                                             })
+                                                  configFile: viteConfigFile,
+                                                  mode,
+                                                });
 
-  const devServer =await viteDevServer.listen();
+  const devServer = await viteDevServer.listen();
   return {
     viteDevServer,
-    devServer
-  }
+    devServer,
+  };
 }
-module.exports = startRenderer
+
+module.exports = startRenderer;
