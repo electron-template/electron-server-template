@@ -13,6 +13,7 @@
     "electron"
   ],
   "compilerOptions": {
+    "allowJs": true,
     // 指定生成代码的模块系统
     "module": "commonjs",
     // 生成相应的 `.d.ts` 声明文件

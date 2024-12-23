@@ -2,7 +2,6 @@ const Path = require('path');
 const Chalk = require('chalk');
 const FileSystem = require('fs');
 
-const serverBuild = require('./server');
 const electronBuild = require('./electron');
 const rendererBuild = require('./renderer');
 
@@ -26,7 +25,6 @@ deleteBuild(rootPath).then(async () => {
   await Promise.all([
                       electronBuild(rootPath),
                       rendererBuild(rootPath, process.env.NODE_ENV),
-                      serverBuild(rootPath),
                     ]);
   console.log(Chalk.greenBright('Renderer & main successfully transpiled! (ready to be built with electron-builder)'));
 });

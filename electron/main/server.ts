@@ -1,5 +1,5 @@
 import { join } from 'path';
-import { fork, spawn, exec } from 'child_process';
+import { spawn } from 'child_process';
 import { EOL } from 'os';
 import Chalk from 'chalk';
 import { app } from 'electron';
