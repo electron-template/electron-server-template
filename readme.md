@@ -2,7 +2,7 @@
 打包后服务无法请求(由于mime包导致,下载mime: 1.6.0解决)
 
 # 启动项目
-pnpm install
+pnpm installAll
 pnpm dev
 
 # 目录架构
