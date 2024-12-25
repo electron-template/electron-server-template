@@ -2,7 +2,7 @@
   "name": "1",
   "version": "1.0.0",
   "type": "commonjs",
-  "main": "main/electron/index.js",
+  "main": "electron/main/index.js",
   "scripts": {
     "installAll": "install.sh",
     "test": "nest start",
@@ -49,6 +49,7 @@
     "@nestjs/core": "^10.4.4",
     "@nestjs/platform-express": "^10.0.0",
     "axios": "^1.7.7",
+    "mime": "1.6.0",
     "reflect-metadata": "0.2.0",
     "rxjs": "7.8.1"
   },

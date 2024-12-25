@@ -26,7 +26,7 @@
     // 创建开始菜单图标
     "createStartMenuShortcut": false,
     // electron中LICENSE.txt所需要的格式，并非是GBK，或者UTF-8，LICENSE.txt写好之后，需要进行转化，转化为ANSI
-//    "license": "LICENSE.txt",
+    //    "license": "LICENSE.txt",
     // 安装图标
     // "installerIcon": "build/installerIcon_120.ico",
     // 卸载图标
@@ -47,11 +47,11 @@
     //   'x64',
     //   'ia32'
     // ]
-    //      "target": [
-    //        "nsis",
-    //        "zip"
-    //      ]
     // 目标包类型
+    // "target": [
+    //   "nsis",
+    //   "zip"
+    // ]
   },
   //  "mac": {
   //    // 应用程序类别
@@ -65,11 +65,11 @@
   //    "icon": "build/icon.icns"
   //  },
   // "dmg": {
-  // 背景图像的路径
-  //    "background": "build/background.tiff or build/background.png",
-  //    "title": "标题",
-  // 图标路径
-  //    "icon": "build/icon.icns"
+  // // 背景图像的路径
+  // "background": "build/background.tiff or build/background.png",
+  // "title": "标题",
+  // // 图标路径
+  // "icon": "build/icon.icns"
   // },
 
   "files": [
@@ -97,29 +97,27 @@
         "**/*"
       ]
     },
-    // 静态文件
-//    {
-//      "from": "src/main/static",
-//      "to": "static",
-//      "filter": [
-//        "**/*"
-//      ]
-//    },
     //排除的文件
-    "!build",
-    "!dist",
-    "!scripts",
     "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
     "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
     "!**/node_modules/*.d.ts",
     "!**/node_modules/.bin",
     "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
-    "!.editorconfig",
+    //打包输出文件,和scripts脚本
+    "!build",
+    "!dist",
+    "!scripts",
+    "!electron",
+    "!server",
+    "!renderer",
+    //#region 配置文件
     "!**/._*",
-    "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
     "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
     "!**/{appveyor.yml,.travis.yml,circle.yml}",
+    "!.editorconfig",
+    "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
     "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
     "package.json"
+    //#endregion
   ]
 }
