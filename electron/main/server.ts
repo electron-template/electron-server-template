@@ -61,10 +61,7 @@ async function createServer(mainWindow) {
 
     const app = await NestFactory.create(AppModule);
     await app.listen(process.env.PORT ?? 3000);
-    // const serverPath = join(__dirname, '..', '..', '..', 'server');
-    // createServerHandle(serverPath, mainWindow, 'npm', ['run', 'dev'], serverPath);
   }
-
 }
 
 export default createServer;
