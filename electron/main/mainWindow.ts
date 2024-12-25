@@ -7,9 +7,8 @@ export default createWindow;
 
 const preloadPath = join(__dirname, '..', 'preload.js'); // preload.js的path
 
-let mainWindow;
 async function createWindow() {
-  mainWindow = new BrowserWindow({
+  const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
@@ -23,9 +22,9 @@ async function createWindow() {
 
   if (process.env.NODE_ENV === 'development') {
     const rendererPort = process.argv[2];
-    mainWindow.loadURL(`http://localhost:${rendererPort}`);
+    await mainWindow.loadURL(`http://localhost:${rendererPort}`);
   } else {
-    mainWindow.loadFile(join(app.getAppPath(), '/renderer', 'index.html'));
+    await mainWindow.loadFile(join(app.getAppPath(), '/renderer', 'index.html'));
   }
 
 
@@ -35,35 +34,56 @@ async function createWindow() {
     return { action: 'deny' };
   });
 
-  mainWindow.webContents.on('did-finish-load', () => {
-    console.log(`${Chalk.greenBright('=======================================')}`);
-    console.log(`${Chalk.greenBright('窗口启动成功')}`);
-    console.log(`${Chalk.greenBright('=======================================')}`);
+
+  // 监听web加载完毕
+  function windowDidFinishLoad() {
+    return new Promise((resolve, reject) => {
+      if (!mainWindow) {
+        reject();
+        return;
+      }
+      mainWindow.webContents.on('did-finish-load', () => {
+        console.log(`${Chalk.greenBright('=======================================')}`);
+        console.log(`${Chalk.greenBright('窗口启动成功')}`);
+        console.log(`${Chalk.greenBright('=======================================')}`);
+        resolve('窗口启动成功');
+      });
+      mainWindow.webContents.on('did-fail-load', () => {
+        console.log(`${Chalk.redBright('=======================================')}`);
+        console.log(`${Chalk.redBright('窗口启动失败')}`);
+        console.log(`${Chalk.redBright('=======================================')}`);
+        reject('窗口启动失败');
+      });
+    });
+  }
+
+  await windowDidFinishLoad();
+
+  // mainWindow.webContents.on('did-finish-load', () => {
+  //     process.stdout.write(Chalk.blueBright(`222222222222222222222222222222222222`))
+  // })
+
+  // 当尝试打开新窗口时触发,
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      // 激活窗口并从最小化恢复为之前的样子
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.focus();
+    }
   });
-  mainWindow.webContents.on('did-fail-load', () => {
-    console.log(`${Chalk.redBright('=======================================')}`);
-    console.log(`${Chalk.redBright('窗口启动失败')}`);
-    console.log(`${Chalk.redBright('=======================================')}`);
+  //当应用激活时,打开/创建一个窗口
+  app.on('activate', () => {
+    const allWindows = BrowserWindow.getAllWindows();
+    if (allWindows.length) {
+      allWindows[0].focus();
+    } else {
+      createWindow();
+    }
   });
+
   return mainWindow;
 }
-// 当尝试打开新窗口时触发,
-app.on('second-instance', () => {
-  if (mainWindow) {
-    // 激活窗口并从最小化恢复为之前的样子
-    if (mainWindow.isMinimized()) mainWindow.restore();
-    mainWindow.focus();
-  }
-});
-//当应用激活时,打开/创建一个窗口
-app.on('activate', () => {
-  const allWindows = BrowserWindow.getAllWindows();
-  if (allWindows.length) {
-    allWindows[0].focus();
-  } else {
-    createWindow();
-  }
-});
+
 // 保障只会启用一个窗口
 // app.requestSingleInstanceLock()获取当前是否只有一个应用实例
 if (!app.requestSingleInstanceLock()) {

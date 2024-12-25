@@ -10,9 +10,8 @@ app.whenReady().then(async () => {
     createTray();
 
     const mainWindow = await createWindow();
-    createServer(mainWindow);
+    await createServer(mainWindow);
     createRequest();
-
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
         callback({
             responseHeaders: {
