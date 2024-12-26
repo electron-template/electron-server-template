@@ -67,7 +67,9 @@ async function createWindow() {
   app.on('second-instance', () => {
     if (mainWindow) {
       // 激活窗口并从最小化恢复为之前的样子
-      if (mainWindow.isMinimized()) mainWindow.restore();
+      if (mainWindow.isMinimized()){
+        mainWindow.restore();
+      }
       mainWindow.focus();
     }
   });
@@ -90,5 +92,8 @@ if (!app.requestSingleInstanceLock()) {
   app.quit();
   process.exit(0);
 }
-
+app.on('before-quit', function() {
+  app.quit();
+  process.exit(0);
+});
 

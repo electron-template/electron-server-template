@@ -8,10 +8,10 @@ import Chalk from "chalk";
 
 app.whenReady().then(async () => {
     createTray();
+    createRequest();
 
     const mainWindow = await createWindow();
     await createServer(mainWindow);
-    createRequest();
     session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
         callback({
             responseHeaders: {
