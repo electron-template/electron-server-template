@@ -20,7 +20,7 @@
     // 解析非相对模块名的基准目录
     "baseUrl": "./",
     // 指定输出目录
-    "outDir": "../build",
+    "outDir": "../build/electron",
     // 启用增量编译
     "incremental": true,
     // 跳过声明文件的类型检查

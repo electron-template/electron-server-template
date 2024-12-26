@@ -4,15 +4,15 @@ import createTray from './tary';
 import createWindow from './mainWindow';
 import createRequest from './request';
 import createServer from './server';
+import Chalk from 'chalk';
 
 
-let stopServerHandler = null;
+let stopServerHandler;
 app.whenReady().then(async () => {
   createTray();
   createRequest();
-
-  const mainWindow = await createWindow();
-  stopServerHandler = await createServer(mainWindow);
+  await createWindow();
+  stopServerHandler = await createServer();
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     callback({
       responseHeaders: {
@@ -34,12 +34,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     stopServerHandler?.();
     app.quit();
-    process.exit();
+    // process.exit();
   }
 });
 
 app.on('before-quit', () => {
   stopServerHandler?.();
-  app.quit();
-  process.exit();
 });
