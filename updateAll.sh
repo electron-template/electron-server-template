@@ -5,6 +5,7 @@ pnpm install
 
 echo "$(tput setaf 4)正在初始化子模块中... $(tput setaf 3)"
 git submodule init
+git submodule sync
 git submodule update
 
 echo "$(tput setaf 4)正在初始化renderer项目... $(tput setaf 3)"
