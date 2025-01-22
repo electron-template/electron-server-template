@@ -25,10 +25,11 @@ git submodule update --remote
 - 删除子模块
 
 ```sh
-# 删除对应子模块目录
-# .gitmodules文件中删除对应内容
-git config -f .git/config --remove-section submodule.[子模块目录]
+# 清除git缓存
 git rm --cached <子模块目录>
+rm -rf .git/modules/<子模块目录>
+# 删除对应子模块目录
+rm -rf <子模块目录>
 ```
 
 # 目录架构
