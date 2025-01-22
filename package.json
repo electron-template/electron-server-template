@@ -4,7 +4,7 @@
   "type": "commonjs",
   "main": "electron/main/index.js",
   "scripts": {
-    "installAll": "updateAll.sh",
+    "installAll": "installAll.sh",
     "test": "nest start",
     "dev": "node scripts/dev/index.js",
     "build": "node scripts/build/index.js && nest build && electron-builder",

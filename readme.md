@@ -1,9 +1,35 @@
 # 问题
 打包后服务无法请求(由于mime包导致,下载mime: 1.6.0解决)
 
-# 启动项目
+- 启动项目
+
+```sh
 pnpm installAll
 pnpm dev
+```
+
+- 新增子模块
+
+```shell
+
+git submodule add -b <子模块分支> <子模块仓库地址> <子模块目录>
+
+```
+
+- 更新子模块
+
+```shell
+git submodule update --remote
+```
+
+- 删除子模块
+
+```sh
+# 删除对应子模块目录
+# .gitmodules文件中删除对应内容
+git config -f .git/config --remove-section submodule.[子模块目录]
+git rm --cached <子模块目录>
+```
 
 # 目录架构
 ```
@@ -19,3 +45,4 @@ renderer        前端页面
 server          后端服务
 
 ```
+

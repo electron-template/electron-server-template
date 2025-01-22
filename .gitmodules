@@ -1,3 +1,4 @@
 [submodule "renderer"]
 	path = renderer
-	url = https://gitee.com/electron-template/electron-template-renderer.git
+	url = https://github.com/electron-template/electron-server-template-renderer.git
+	branch = main
