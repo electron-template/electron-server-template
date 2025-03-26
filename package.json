@@ -1,6 +1,14 @@
 {
   "name": "electron-server-template",
   "packageManager": "pnpm@8.6.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "author": "1983531544@qq.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/electron-template/electron-server-template.git"
+  },
   "keywords": [
     "electron",
     "nest",
