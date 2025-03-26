@@ -1,5 +1,16 @@
 {
-  "name": "1",
+  "name": "electron-server-template",
+  "packageManager": "pnpm@8.6.0",
+  "keywords": [
+    "electron",
+    "nest",
+    "elementPlus",
+    "vue3",
+    "typescript",
+    "vite",
+    "pinia",
+    "template"
+  ],
   "version": "1.0.0",
   "type": "commonjs",
   "main": "electron/main/index.js",

@@ -5,6 +5,7 @@
 
 # 依赖
 node_modules
+.yarn
 *-lock.*
 
 # 打包文件
