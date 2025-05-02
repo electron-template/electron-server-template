@@ -1,7 +1,6 @@
-// 存放托盘相关代码
 import { app, Menu, Tray, BrowserWindow } from 'electron';
 import path from 'path';
-import { TrayMenuItem } from './modules/types';
+import { TrayMenuItem } from '../modules/types';
 
 /**
  * 创建托盘图标和菜单
@@ -15,7 +14,7 @@ export default function createTray(options?: {
 }): Tray {
   // 设置默认值
   const iconPath =
-    options?.iconPath || path.join(__dirname, '../static/icon/icon.png');
+    options?.iconPath || path.join(__dirname, '../../static/icon/icon.png');
   const tooltip = options?.tooltip || app.getName();
 
   // 注册自定义协议

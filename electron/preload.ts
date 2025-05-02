@@ -1,10 +1,26 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
+// 创建缓存，减少重复IPC调用
+const apiCache = new Map();
+const EVENT_HANDLERS = new Map();
+
 createPreload();
 
 function createPreload() {
   createIpcRenderer();
   createLoading();
+}
+
+// 优化IPC通信：使用节流和缓存
+function throttle(fn, delay = 100) {
+  let lastCall = 0;
+  return function(this: any, ...args) {
+    const now = Date.now();
+    if (now - lastCall >= delay) {
+      lastCall = now;
+      return fn.apply(this, args);
+    }
+  };
 }
 
 // 向Renderer进程公开一些API，这些api会挂在在window[apiKey]上，这里是window.ipcRenderer
@@ -16,52 +32,101 @@ function createIpcRenderer() {
     //也就是说,构建electron的是主进程
     //构建页面的是渲染进程,但是页面不是,页面调用不了ipcRenderer
 
-    // 监听渲染进程和主进程之间的消息通信
+    // 监听渲染进程和主进程之间的消息通信 - 优化版本
     on(...args: Parameters<typeof ipcRenderer.on>) {
       const [channel, listener] = args;
-      return ipcRenderer.on(channel, (event, ...args) => listener(event, ...args));
+      
+      // 避免重复监听相同的事件
+      if (EVENT_HANDLERS.has(channel)) {
+        ipcRenderer.off(channel, EVENT_HANDLERS.get(channel));
+      }
+      
+      const wrappedListener = (event, ...args) => {
+        listener(event, ...args);
+      };
+      
+      EVENT_HANDLERS.set(channel, wrappedListener);
+      return ipcRenderer.on(channel, wrappedListener);
     },
-    // 取消监听
+    
+    // 取消监听 - 优化版本
     off(...args: Parameters<typeof ipcRenderer.off>) {
       const [channel, ...omit] = args;
-      return ipcRenderer.off(channel, ...omit);
+      
+      if (EVENT_HANDLERS.has(channel)) {
+        ipcRenderer.off(channel, EVENT_HANDLERS.get(channel));
+        EVENT_HANDLERS.delete(channel);
+      } else {
+        return ipcRenderer.off(channel, ...omit);
+      }
     },
-    // 渲染进程和主进程之间的发送消息,不返回,如果要接受反馈,需要通过on监听后端调用的ipcRenderer.send(channel, ...omit)
-    send(...args: Parameters<typeof ipcRenderer.send>) {
+    
+    // 渲染进程和主进程之间的发送消息 - 节流版本
+    send: throttle((...args: Parameters<typeof ipcRenderer.send>) => {
       const [channel, ...omit] = args;
       return ipcRenderer.send(channel, ...omit);
-    },
-    // 渲染进程和主进程之间的发送消息,并通过promise监听响应,返回promise,值为后端的响应值
-    //后端示例:
-    //const {ipcMain} = require('electron');
-    //ipcMain.handle('get-data', async (event, arg) => {
-    //    // 模拟数据处理过程
-    //    const processedData = `Processed ${arg}`;
-    //    return processedData; // 返回处理后的数据给渲染进程
-    //});
+    }, 50),
+
+    // 优化invoke调用，添加缓存功能
     invoke(...args: Parameters<typeof ipcRenderer.invoke>) {
-      const [channel, ...omit] = args;
-      return ipcRenderer.invoke(channel, ...omit);
+      const [channel, ...params] = args;
+      
+      // 对于一些可缓存的调用使用缓存
+      if (channel.startsWith('get-') || channel.startsWith('fetch-')) {
+        const cacheKey = `${channel}:${JSON.stringify(params)}`;
+        
+        // 检查缓存
+        if (apiCache.has(cacheKey)) {
+          return Promise.resolve(apiCache.get(cacheKey));
+        }
+        
+        // 执行调用并缓存结果
+        return ipcRenderer.invoke(channel, ...params).then(result => {
+          apiCache.set(cacheKey, result);
+          
+          // 设置缓存过期时间
+          setTimeout(() => {
+            apiCache.delete(cacheKey);
+          }, 30000); // 30秒缓存
+          
+          return result;
+        });
+      }
+      
+      // 非可缓存调用直接执行
+      return ipcRenderer.invoke(channel, ...params);
     },
 
+    // 兼容性API，优化后
     request(...args: Parameters<typeof ipcRenderer.invoke>) {
       const [channel, ...omit] = args;
       return ipcRenderer.invoke(channel, ...omit);
     },
 
-    // 暴露给渲染进程的API
+    // 暴露给渲染进程的API - 优化版本
     onChildOutput: (callback) => {
-      ipcRenderer.on('child-output', (event, output) => {
+      // 清理之前的监听器
+      if (EVENT_HANDLERS.has('child-output')) {
+        ipcRenderer.off('child-output', EVENT_HANDLERS.get('child-output'));
+      }
+      
+      const wrappedCallback = (event, output) => {
         callback(output);
-      });
+      };
+      
+      EVENT_HANDLERS.set('child-output', wrappedCallback);
+      ipcRenderer.on('child-output', wrappedCallback);
     },
-    // ...
+    
+    // 清除缓存API
+    clearCache: () => {
+      apiCache.clear();
+    }
   });
-
 }
 
 function createLoading() {
-  // --------- 等待dom加载完毕 ---------
+  // --------- 优化DOM加载完毕检测 ---------
   function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {
     return new Promise((resolve) => {
       // document.readySate:
@@ -82,7 +147,7 @@ function createLoading() {
     });
   }
 
-//#region 给electron加一个加载动画
+//#region 给electron加一个加载动画 - 优化性能版本
   const safeDOM = {
     append(parent: HTMLElement, child: HTMLElement) {
       if (!Array.from(parent.children).find(e => e === child)) {
@@ -96,7 +161,6 @@ function createLoading() {
     },
   };
 
-
   /**
    * https://tobiasahlin.com/spinkit
    * https://connoratherton.com/loaders
@@ -105,6 +169,7 @@ function createLoading() {
    */
   function useLoading() {
     const className = `loaders-css__square-spin`;
+    // 优化CSS动画性能
     const styleContent = `
 @keyframes square-spin {
   25% { transform: perspective(100px) rotateX(180deg) rotateY(0); }
@@ -118,6 +183,8 @@ function createLoading() {
   height: 50px;
   background: #fff;
   animation: square-spin 3s 0s cubic-bezier(0.09, 0.57, 0.49, 0.9) infinite;
+  will-change: transform;
+  transform: translateZ(0);
 }
 .app-loading-wrap {
   position: fixed;
@@ -155,13 +222,26 @@ function createLoading() {
 // ----------------------------------------------------------------------
 
   const { appendLoading, removeLoading } = useLoading();
-  domReady().then(appendLoading);
+  // 使用 requestIdleCallback 优化加载时机
+  if (window.requestIdleCallback) {
+    requestIdleCallback(() => {
+      domReady().then(appendLoading);
+    });
+  } else {
+    domReady().then(appendLoading);
+  }
 
   window.onmessage = (ev) => {
-    ev.data.payload === 'removeLoading' && removeLoading();
+    if (ev.data.payload === 'removeLoading') {
+      // 使用 requestAnimationFrame 确保在下一帧动画前移除loading
+      requestAnimationFrame(() => {
+        removeLoading();
+      });
+    }
   };
 
-  // setTimeout(removeLoading, 999)
+  // 超时保护，确保loading不会一直显示
+  setTimeout(removeLoading, 5000);
   //#endregion
 }
 

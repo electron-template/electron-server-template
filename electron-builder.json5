@@ -1,123 +1,138 @@
 // @see https://www.electron.build/configuration/configuration
 {
-  // 应用程序id
-  "appId": "com.node.app",
-  // 应用名称
-  "productName": "node-electron",
-  // 设置为 true 可以把自己的代码合并并加密
-  "asar": false,
-  "directories": {
-    // 构建资源路径默认为build
-    // "buildResources": "build",
-    // 输出目录 默认为dist
-    "output": "dist"
-  },
-  "nsis": {
-    "perMachine": false,
-    "shortcutName": "Electron App",
-    // 是否一键安装，建议为 false，可以让用户点击下一步、下一步、下一步的形式安装程序，如果为true，当用户双击构建好的程序，自动安装程序并打开，即：一键安装（one-click installer）
-    "oneClick": false,
-    // 允许请求提升。 如果为false，则用户必须使用提升的权限重新启动安装程序。
-    "allowElevation": true,
-    // 允许修改安装目录，建议为 true，是否允许用户改变安装目录，默认是不允许
-    "allowToChangeInstallationDirectory": true,
-    // 创建桌面图标
-    "createDesktopShortcut": false,
-    // 创建开始菜单图标
-    "createStartMenuShortcut": false,
-    // electron中LICENSE.txt所需要的格式，并非是GBK，或者UTF-8，LICENSE.txt写好之后，需要进行转化，转化为ANSI
-    //    "license": "LICENSE.txt",
-    // 安装图标
-    // "installerIcon": "build/installerIcon_120.ico",
-    // 卸载图标
-    // "uninstallerIcon": "build/uninstallerIcon_120.ico",
-    // 安装时头部图标
-    // "installerHeaderIcon": "build/installerHeaderIcon_120.ico",
-  },
-  "linux": {
-    "target": [
-      "snap"
-    ]
-  },
-  "win": {
-    // 打包成一个独立的 exe 安装程序
-    'target': 'nsis',
-    // 这个意思是打出来32 bit + 64 bit的包，但是要注意：这样打包出来的安装包体积比较大，所以建议直接打32的安装包。
-    // 'arch': [
-    //   'x64',
-    //   'ia32'
-    // ]
-    // 目标包类型
-    // "target": [
-    //   "nsis",
-    //   "zip"
-    // ]
-  },
-  //  "mac": {
-  //    // 应用程序类别
-  //    "category": "public.app-category.developer-tools",
-  //    // 目标包类型
-  //    "target": [
-  //      "dmg",
-  //      "zip"
-  //    ],
-  //    // 图标的路径
-  //    "icon": "build/icon.icns"
-  //  },
-  // "dmg": {
-  // // 背景图像的路径
-  // "background": "build/background.tiff or build/background.png",
-  // "title": "标题",
-  // // 图标路径
-  // "icon": "build/icon.icns"
-  // },
+  // 应用程序ID，遵循反向域名表示法
+  appId: 'com.electron.server.template',
 
-  "files": [
-    // electron主线程
+  // 应用名称
+  productName: 'Electron Server Template',
+
+  // 构建设置
+  asar: true, // 启用asar打包，提高性能
+  asarUnpack: [
+    // 不打包到asar中的文件
+    '**/*.node',
+    '**/node_modules/sharp/**', // 如有使用sharp等原生模块，需解包
+  ],
+  compression: 'maximum', // 最大压缩，减小包体积
+
+  // 目录设置
+  directories: {
+    output: 'dist', // 输出目录
+    buildResources: 'resources', // 构建资源目录
+  },
+
+  // 文件设置
+  files: [
+    // 主进程文件
     {
-      "from": "build/electron",
-      "to": "electron",
-      "filter": [
-        "**/*"
-      ]
+      from: 'build/electron',
+      to: 'electron',
+      filter: ['**/*'],
     },
-    // renderer线程(前端页面)
+    // 渲染进程文件
     {
-      "from": "build/renderer",
-      "to": "renderer",
-      "filter": [
-        "**/*"
-      ]
+      from: 'build/renderer',
+      to: 'renderer',
+      filter: ['**/*'],
     },
-    // node服务
+    // 服务器文件
     {
-      "from": "build/server",
-      "to": "server",
-      "filter": [
-        "**/*"
-      ]
+      from: 'build/server',
+      to: 'server',
+      filter: ['**/*'],
     },
-    //排除的文件
-    "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
-    "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
-    "!**/node_modules/*.d.ts",
-    "!**/node_modules/.bin",
-    "!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}",
-    //打包输出文件,和scripts脚本
-    "!build",
-    "!dist",
-    "!scripts",
-    "!electron",
-    "!server",
-    "!renderer",
-    //#region 配置文件
-    "!**/._*",
-    "!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}",
-    "!**/{appveyor.yml,.travis.yml,circle.yml}",
-    "!.editorconfig",
-    "!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}",
-    "!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}",
-    "package.json"
-    //#endregion
-  ]
+    // 排除不必要的文件
+    '!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}',
+    '!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}',
+    '!**/node_modules/*.d.ts',
+    '!**/node_modules/.bin',
+    '!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj}',
+    // 排除构建和源码相关目录
+    '!build',
+    '!dist',
+    '!scripts',
+    '!electron',
+    '!server',
+    '!renderer',
+    // 排除开发相关文件和目录
+    '!**/._*',
+    '!**/{__pycache__,thumbs.db,.flowconfig,.idea,.vs,.nyc_output}',
+    '!**/{.eslintrc,.babelrc,.gitignore,.npmignore}',
+    '!**/{appveyor.yml,.travis.yml,circle.yml}',
+    '!.editorconfig',
+    '!**/{.DS_Store,.git,.hg,.svn,CVS,RCS,SCCS,.gitignore,.gitattributes}',
+    '!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}',
+    'package.json',
+  ],
+
+  // 额外资源
+  extraResources: [
+    {
+      from: 'resources',
+      to: 'resources',
+      filter: ['**/*'],
+    },
+  ],
+
+  // 构建前文件复制
+  extraMetadata: {
+    main: 'electron/main/index.js',
+  },
+
+  // 发布配置
+  publish: null,
+
+  // 并行打包
+  buildDependenciesFromSource: false,
+  npmRebuild: false,
+
+  // 性能优化配置
+  afterPack: './scripts/automation/cleanup.js',
+
+  // Windows安装配置
+  nsis: {
+    oneClick: false, // 禁用一键安装
+    allowToChangeInstallationDirectory: true, // 允许修改安装目录
+    perMachine: false, // 不安装到每台机器
+    shortcutName: 'Electron Server Template', // 快捷方式名称
+    artifactName: '${productName}-Setup-${version}.${ext}', // 安装包名称格式
+    uninstallDisplayName: '${productName}', // 卸载显示名称
+    createDesktopShortcut: true, // 创建桌面快捷方式
+    createStartMenuShortcut: true, // 创建开始菜单快捷方式
+    menuCategory: 'Server Tools', // 开始菜单分类
+    runAfterFinish: true, // 安装完成后运行
+    differentialPackage: true, // 启用差异包，减小更新包大小
+  },
+
+  // Windows平台配置
+  win: {
+    target: ['nsis', 'portable'], // 打包格式
+    icon: 'resources/icon.ico', // 应用图标
+    artifactName: '${productName}-${version}-${os}-${arch}.${ext}',
+    publisherName: 'Electron Template', // 发布者名称
+  },
+
+  // macOS平台配置
+  mac: {
+    target: ['dmg', 'zip'], // 打包格式
+    category: 'public.app-category.developer-tools',
+    icon: 'resources/icon.icns', // macOS图标
+    hardenedRuntime: true, // 强化运行时
+    gatekeeperAssess: false, // 禁用看门狗评估
+    darkModeSupport: true, // 支持暗色模式
+  },
+
+  // Linux平台配置
+  linux: {
+    target: ['AppImage', 'deb', 'rpm'], // 打包格式
+    category: 'Development', // 应用类别
+    icon: 'resources/icons', // Linux图标目录
+    maintainer: 'Electron Template', // 维护者
+  },
+
+  // 协议配置
+  protocols: {
+    name: 'electron-server-protocol',
+    schemes: ['electron-server'],
+  },
 }

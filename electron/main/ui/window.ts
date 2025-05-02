@@ -1,13 +1,12 @@
-//存放窗口相关代码
 import { app, BrowserWindow, shell } from 'electron';
 import { join } from 'path';
 import Chalk from 'chalk';
-import { getSecureWindowPreferences } from './modules/security';
-import { getAppInfo } from './modules/lifecycle';
-import { WindowConfig } from './modules/types';
+import { getSecureWindowPreferences } from '../modules/security';
+import { getAppInfo } from '../modules/lifecycle';
+import { WindowConfig } from '../modules/types';
 
 // 预加载脚本路径
-const preloadPath = join(__dirname, '..', 'preload.js');
+const preloadPath = join(__dirname, '../..', 'preload.js');
 
 /**
  * 创建主应用窗口
@@ -110,16 +109,6 @@ export default async function createWindow(
     }, 30000); // 30秒超时
   });
 
-  // 优化窗口实例管理
-  app.on('second-instance', () => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) {
-        mainWindow.restore();
-      }
-      mainWindow.focus();
-    }
-  });
-
   // 优化垃圾回收
   mainWindow.on('closed', () => {
     // 手动清除引用，帮助垃圾回收
@@ -129,23 +118,29 @@ export default async function createWindow(
   return mainWindow;
 }
 
-// 处理 Mac 应用激活
-app.on('activate', () => {
-  const allWindows = BrowserWindow.getAllWindows();
-  if (allWindows.length) {
-    allWindows[0].focus();
-  } else {
-    createWindow();
-  }
-});
+/**
+ * 设置窗口功能处理程序
+ */
+export function setupWindowHandlers(): void {
+  // 处理 Mac 应用激活
+  app.on('activate', () => {
+    const allWindows = BrowserWindow.getAllWindows();
+    if (allWindows.length) {
+      allWindows[0].focus();
+    } else {
+      createWindow();
+    }
+  });
 
-// 保障只会启用一个窗口
-// app.requestSingleInstanceLock()获取当前是否只有一个应用实例
-if (!app.requestSingleInstanceLock()) {
-  app.quit();
-  process.exit(0);
+  // 处理第二实例启动事件
+  app.on('second-instance', () => {
+    const allWindows = BrowserWindow.getAllWindows();
+    if (allWindows.length) {
+      const mainWindow = allWindows[0];
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
+      mainWindow.focus();
+    }
+  });
 }
-app.on('before-quit', function () {
-  app.quit();
-  process.exit(0);
-});

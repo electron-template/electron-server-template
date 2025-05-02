@@ -1,17 +1,7 @@
-/*
- * @Author: moluoxixi 1983531544@qq.com
- * @Date: 2025-01-24 09:54:39
- * @LastEditors: moluoxixi 1983531544@qq.com
- * @LastEditTime: 2025-04-21 20:09:18
- * @FilePath: \electron-server-template\electron\main\server.ts
- * @Description:
- *
- * Copyright (c) 2025 by ${git_name_email}, All Rights Reserved.
- */
 import { join } from 'path';
 import { app } from 'electron';
 import { NestFactory } from '@nestjs/core';
-import { ServerStopHandler } from './modules/types';
+import { ServerStopHandler } from '../modules/types';
 
 /**
  * 创建并启动 NestJS 服务
@@ -21,7 +11,7 @@ export default async function createServer(): Promise<ServerStopHandler> {
   // 根据环境确定服务器模块路径
   const serverPath =
     process.env.NODE_ENV === 'development'
-      ? join(__dirname, '../../server', '/app.module')
+      ? join(__dirname, '../../../server', '/app.module')
       : join(app.getAppPath(), '/server', '/app.module');
 
   try {

@@ -26,16 +26,42 @@
     "installAll": "installAll.sh",
     "test": "nest start",
     "dev": "node scripts/dev/index.js",
-    "build": "node scripts/build/index.js && nest build && electron-builder",
-    "build:win": "node scripts/build/index.js && nest build && electron-builder --win",
-    "build:mac": "node scripts/build/index.js && nest build && electron-builder --mac",
-    "build:linux": "node scripts/build/index.js && nest build && electron-builder --linux",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
+    "build": "node scripts/build/index.js && nest build && electron-builder --config electron-builder.json5",
+    "build:win": "node scripts/build/index.js && nest build && electron-builder --win --config electron-builder.json5",
+    "build:mac": "node scripts/build/index.js && nest build && electron-builder --mac --config electron-builder.json5",
+    "build:linux": "node scripts/build/index.js && nest build && electron-builder --linux --config electron-builder.json5",
+    "build:electron": "cd electron && tsc",
+    "build:renderer": "cd renderer && pnpm build",
+    "build:server": "nest build",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "audit-deps": "node scripts/audit-deps.js",
+    "update-deps": "node scripts/automation/update-deps.js",
+    "update-deps:interactive": "node scripts/automation/update-deps.js --interactive",
+    "release": "node scripts/automation/release.js",
+    "release:minor": "node scripts/automation/release.js minor",
+    "release:major": "node scripts/automation/release.js major"
   },
   "license": "ISC",
   "description": "electron+nest+elementPlus",
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ],
+    "peerDependencyRules": {
+      "ignoreMissing": [
+        "react",
+        "react-dom"
+      ]
+    }
+  },
+  "build": {
+    "beforeBuild": "npm run build:renderer && npm run build:server",
+    "afterPack": "node scripts/automation/cleanup.js",
+    "artifactName": "${productName}-${version}-${os}-${arch}.${ext}"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^19.8.0",
+    "@nestjs/cli": "^10.4.9",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
     "@types/express": "^5.0.0",
@@ -47,7 +73,7 @@
     "chalk": "^4.1.2",
     "chokidar": "^3.5.3",
     "commitlint": "^19.8.0",
-    "electron": "^27.1.0",
+    "electron": "32.1.1",
     "electron-builder": "^23.6.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.0.0",
@@ -66,14 +92,13 @@
     "vite": "^5.1.5"
   },
   "dependencies": {
-    "@nestjs/cli": "^10.4.9",
-    "@nestjs/common": "10.0.0",
+    "@nestjs/common": "^10.2.10",
     "@nestjs/core": "^10.4.4",
-    "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/platform-express": "^10.2.10",
     "axios": "^1.7.7",
-    "mime": "1.6.0",
-    "reflect-metadata": "0.2.0",
-    "rxjs": "7.8.1"
+    "mime": "^3.0.0",
+    "reflect-metadata": "^0.2.0",
+    "rxjs": "^7.8.1"
   },
   "jest": {
     "moduleFileExtensions": [

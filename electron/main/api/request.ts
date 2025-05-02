@@ -1,7 +1,6 @@
-// 处理来自前端的请求
 import { ipcMain } from 'electron';
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { RequestConfig, CacheItem, ApiResponse } from './modules/types';
+import { RequestConfig, CacheItem, ApiResponse } from '../modules/types';
 
 /**
  * 请求缓存管理器
