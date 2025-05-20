@@ -9,6 +9,7 @@ node_modules
 *-lock.*
 
 # 打包文件
+build
 dist
 dist-ssr
 
