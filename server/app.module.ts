@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
-import { CoreModule } from './core/core.module';
-import { FeaturesModule } from './features/features.module';
-import { SharedModule } from './shared/shared.module';
 import { ConfigModule } from './config/config.module';
+import { CoreModule } from './core/core.module';
+import { SharedModule } from './shared/shared.module';
+import { ModelsModule } from './models/models.module';
+import { ControllersModule } from './controllers/controllers.module';
+import { ViewsModule } from './views/views.module';
 
 @Module({
   imports: [
@@ -12,8 +14,10 @@ import { ConfigModule } from './config/config.module';
     CoreModule,
     // 共享模块，提供公共服务和组件
     SharedModule,
-    // 功能模块，包含所有业务逻辑
-    FeaturesModule
+    // MVC架构模块
+    ModelsModule,
+    ViewsModule,
+    ControllersModule
   ],
   controllers: [],
   providers: [],
