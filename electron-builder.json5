@@ -77,6 +77,7 @@
   // 构建前文件复制
   extraMetadata: {
     main: 'electron/main/index.js',
+    serverModulePath: 'build/server/app.module.js'
   },
 
   // 发布配置

@@ -6,7 +6,7 @@ export default {
   ignores: [(commit) => commit.includes('init')],
   extends: ['@commitlint/config-conventional'],
   rules: {
-    'commit-message-rule': [2, 'always'],
+    'commit-message-rule': [2, 'always']
   },
   plugins: [
     {
@@ -14,7 +14,7 @@ export default {
         'commit-message-rule': ({ header }) => {
           // 匹配 <type>(<scope>): <short description>
           // 注意：这里简化了校验，只要求 type 和 short description 存在
-          const typeList = 'build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test'
+          const typeList = '|build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test|'
           const AngularCommitReg = new RegExp(`^(<${typeList}>(?:\\([a-zA-Z0-9_-]+\\))?):\\s.+$`)
           // feat     新增功能，迭代项目需求
           // refactor 重构代码，非新增功能也非修复缺陷
@@ -43,10 +43,10 @@ export default {
             "            'docs: 更新文档，仅修改文档不修改代码',\n" +
             "            'build: 编译相关的修改，例如发布版本、对项目构建或者依赖的改动',\n" +
             "            'chore: 其他修改, 比如改变构建流程、或者增加依赖库、工具等',\n" +
-            "            'ci: 更新脚本，改动CI或执行脚本配置',",
+            "            'ci: 更新脚本，改动CI或执行脚本配置',"
           ]
-        },
-      },
-    },
-  ],
+        }
+      }
+    }
+  ]
 }

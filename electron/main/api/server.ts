@@ -2,19 +2,37 @@ import { join } from 'path';
 import { app } from 'electron';
 import { NestFactory } from '@nestjs/core';
 import { ServerStopHandler } from '../modules/types';
+import * as fs from 'fs';
 
 /**
  * 创建并启动 NestJS 服务
  * @returns 停止服务器的处理函数
  */
 export default async function createServer(): Promise<ServerStopHandler> {
-  // 根据环境确定服务器模块路径
-  const serverPath =
-    process.env.NODE_ENV === 'development'
-      ? join(__dirname, '../../../server', '/app.module')
-      : join(app.getAppPath(), '/server', '/app.module');
+  let serverPath;
+  
+  if (process.env.NODE_ENV === 'development') {
+    serverPath = join(__dirname, '../../../server', '/app.module');
+  } else {
+    // 尝试从package.json读取serverModulePath配置
+    try {
+      const packageJsonPath = join(app.getAppPath(), 'package.json');
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));
+      
+      if (packageJson.serverModulePath) {
+        serverPath = join(app.getAppPath(), packageJson.serverModulePath);
+      } else {
+        serverPath = join(app.getAppPath(), 'build/server', '/app.module');
+      }
+    } catch (error) {
+      console.warn('读取package.json失败，使用默认server路径');
+      serverPath = join(app.getAppPath(), 'build/server', '/app.module');
+    }
+  }
 
   try {
+    console.log(`尝试加载服务器模块: ${serverPath}`);
+    
     // 动态导入应用模块
     const { AppModule } = await import(serverPath);
 

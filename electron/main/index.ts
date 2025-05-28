@@ -74,8 +74,17 @@ class ElectronApp {
 
     // 设置应用生命周期
     setupAppLifecycle(async () => {
-      await this.stopServerHandler?.();
-      cleanupResources();
+      try {
+        if (typeof this.stopServerHandler === 'function') {
+          await this.stopServerHandler();
+        } else {
+          console.warn('服务器停止处理程序不是一个函数或未定义');
+        }
+      } catch (error) {
+        console.error('停止服务器时出错:', error);
+      } finally {
+        cleanupResources();
+      }
     });
 
     // 设置定期垃圾回收
@@ -86,30 +95,32 @@ class ElectronApp {
    * 启动底层服务
    */
   private async startServices(): Promise<void> {
-    // 并行初始化各个服务模块
-    const initPromises = [];
-
     // 1. 创建托盘图标
-    initPromises.push(
-      Promise.resolve(
-        createTray({
-          tooltip: '电子服务器模板',
-        }),
-      ),
+    const tray = await Promise.resolve(
+      createTray({
+        tooltip: '电子服务器模板',
+      }),
     );
 
     // 2. 设置请求处理
-    initPromises.push(Promise.resolve(createRequest()));
+    await Promise.resolve(createRequest());
 
-    // 3. 启动服务器
-    const serverPromise = createServer().then((handler) => {
-      this.stopServerHandler = handler;
-      return handler;
-    });
-    initPromises.push(serverPromise);
-
-    // 等待关键初始化完成
-    await Promise.all(initPromises);
+    // 3. 启动服务器并获取停止处理程序
+    try {
+      this.stopServerHandler = await createServer();
+      
+      if (typeof this.stopServerHandler !== 'function') {
+        console.warn('警告: 服务器停止处理程序不是一个函数');
+        this.stopServerHandler = async () => {
+          console.log('使用默认关闭处理程序');
+        };
+      }
+    } catch (error) {
+      console.error('启动服务器失败:', error);
+      this.stopServerHandler = async () => {
+        console.log('无需关闭服务器 (启动失败)');
+      };
+    }
 
     // 4. 设置安全策略
     setupSecurityPolicies();
